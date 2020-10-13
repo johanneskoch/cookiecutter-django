@@ -14,11 +14,15 @@ RUN apt-get clean && apt-get update \
   # Pillow dependencies
   # && apt-get install -y libtiff5-dev libjpeg62-turbo-dev libfreetype6-dev liblcms2-dev libwebp-dev \
   # django-extensions
-  && apt-get install -y graphviz-dev
+  # && apt-get install -y graphviz-dev \
+  # cleaning up unused files
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
 
 # Requirements are installed here to ensure they will be cached.
+ARG pip_file
 COPY ./requirements /requirements
-RUN pip install -r /requirements/local.txt
+RUN pip install -r /requirements/$pip_file
 
 COPY ./compose/local/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint

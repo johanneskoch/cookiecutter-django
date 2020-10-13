@@ -9,6 +9,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        pip_file: local.txt
     image: {{ cookiecutter.project_slug }}_local_django
     depends_on:
       - postgres
