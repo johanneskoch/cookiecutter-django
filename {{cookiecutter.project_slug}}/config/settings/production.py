@@ -18,7 +18,7 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["{{ cookiecutter.domain_name }}"])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=['*'])
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -44,6 +44,7 @@ CACHES = {
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
+# This is the de-facto standard, although Pubfront's Nginx-confs usually also add HTTP_X_FORWARDED_PROTOCOL
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
 SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
@@ -92,6 +93,8 @@ AWS_DEFAULT_ACL = None
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
 {% elif cookiecutter.cloud_provider == 'GCP' %}
+from google.oauth2 import service_account  # noqa E402
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file('/secrets/credentials.json')
 GS_BUCKET_NAME = env("DJANGO_GCP_STORAGE_BUCKET_NAME")
 GS_DEFAULT_ACL = "publicRead"
 {% endif -%}

@@ -8,9 +8,7 @@ services:
   django:{% if cookiecutter.use_celery == 'y' %} &django{% endif %}
     build:
       context: .
-      dockerfile: ./Dockerfile
-      args:
-        pip_file: local.txt
+      dockerfile: ./Dockerfile.local
     image: {{ cookiecutter.project_slug }}_local_django
     depends_on:
       - postgres
